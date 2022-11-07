@@ -7,8 +7,10 @@
  * @Description:
  */
 import path from 'path'
+
+const fs = require('fs')
 import { defineConfig, loadEnv } from 'vite'
-import Uni from '@dcloudio/vite-plugin-uni'
+import uni from '@dcloudio/vite-plugin-uni'
 import AutoImport from 'unplugin-auto-import/vite'
 import Unocss from 'unocss/vite'
 import h5ProdEffectPlugin from 'uni-vite-plugin-h5-prod-effect'
@@ -23,7 +25,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     plugins: [
-      Uni(),
+      uni(),
       AutoImport({
         include: [/\.[tj]sx?$/, /\.vue$/, /\.md$/],
         imports: [
@@ -51,6 +53,27 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         // 防止构建因为这东西出错
         external: ['regenerator-runtime'],
+      },
+    },
+
+
+    server: {
+      https: {
+        cert: fs.readFileSync(path.join(__dirname, 'src/ssl/192.168.0.102+1.pem')),
+        key: fs.readFileSync(path.join(__dirname, 'src/ssl/192.168.0.102+1-key.pem')),
+      },
+      proxy: {// 跨域代理
+        '/apis': {
+          // target: 'http://' + env.VUE_APP_BASE_API,
+          target: 'https://yshj.guyatec.com/api/v1', //
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/apis/, ''),
+        },
+        // 代理 WebSocket 或 socket
+        // '/socket.io': {
+        //   target: 'ws://localhost:3000',
+        //   ws: true
+        //  }
       },
     },
   }

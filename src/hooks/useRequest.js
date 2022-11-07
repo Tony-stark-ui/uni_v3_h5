@@ -17,7 +17,7 @@
  * @return {ref} return.loading 是否请求中
  * @return {ref} return.error 错误信息
  * @return {ref} return.data 请求数据
- * @return {ref} return.status 请求状态
+ * @return {ref} return.code 请求状态
  * @return {ref} return.cookies 请求cookies
  * @return {ref} return.headers 请求头
  * @return {ref} return.count 请求次数
@@ -37,121 +37,111 @@
  * 1.依赖与缓存冲突时,到底是否重新请求呢? 1.忽略缓存,依赖更新直接静默?请求  2.添加重新请求标记,缓存过期直接静默?请求
  */
 
-const env = util_useEnv();
+const env = util_useEnv()
 
-const _cache = new Map(); // 缓存实例
-const _cacheDelay = new Map(); // 缓存时间
+const _cache = new Map() // 缓存实例
+const _cacheDelay = new Map() // 缓存时间
 
 function useRequest(urlPath = '', options = {}) {
-    const {
-        id = urlPath,
-        cache = env.VITE_CACHE,
-        cacheDelay = env.VITE_CACHE_DELAY,
-        retry = env.VITE_RETRY,
-        retryDelay = env.VITE_RETRY_DELAY,
-        rely = null,
-        ...uniAjaxOptions
-    } = options;
+    return new Promise((r, e) => {
+        const {
+            id = urlPath,
+            cache = env.VITE_CACHE,
+            cacheDelay = env.VITE_CACHE_DELAY,
+            retry = env.VITE_RETRY,
+            retryDelay = env.VITE_RETRY_DELAY,
+            rely = null,
+            ...uniAjaxOptions
+        } = options
+        const loading = ref(false) // 是否请求中
+        const error = ref(null) // 错误信息
+        const data = ref(null) // 请求数据
+        const code = ref(null) // 请求状态
+        const cookies = ref(null) // 请求cookies
+        const headers = ref(null) // 请求头
+        const errMsg = ref(null) // 错误信息
+        const msg = ref(null) //返回msg
 
-    const loading = ref(false); // 是否请求中
-    const error = ref(null); // 错误信息
-    const data = ref(null); // 请求数据
-    const status = ref(null); // 请求状态
-    const cookies = ref(null); // 请求cookies
-    const headers = ref(null); // 请求头
-    const errMsg = ref(null); // 错误信息
-
-    const count = ref(0); // 请求次数
-    const retryCount = ref(0); // 重试次数
-    const http = ref(null); // 请求实例
-    // 清除缓存
-    const clear = () => {
-        _cache.has(id) && _cache.delete(id);
-        _cacheDelay.has(id) && _cacheDelay.delete(id);
-    };
-    // 清理请求
-    const stop = () => {
-        loading.value && http.value?.abort();
-    };
-    // 请求回调
-    const runCallBack = (val, isSuccess) => {
-        data.value = isSuccess ? val.data || null : null;
-        data.error = isSuccess ? null : val.data || null;
-        status.value = val.statusCode || null;
-        cookies.value = val.cookies || null;
-        headers.value = val.header || null;
-        errMsg.value = val.errMsg || null;
-        loading.value = false;
-    };
-    // 请求成功回调
-    const runSuccess = val => {
-        // 处理缓存
-        if (cache && val.config.method === 'GET') {
-            _cache.set(id, val);
-            _cacheDelay.set(id, new Date().getTime() + cacheDelay);
+        const count = ref(0) // 请求次数
+        const retryCount = ref(0) // 重试次数
+        const http = ref(null) // 请求实例
+        // 清除缓存
+        const clear = () => {
+            _cache.has(id) && _cache.delete(id)
+            _cacheDelay.has(id) && _cacheDelay.delete(id)
         }
-        retryCount.value = 0;
-        runCallBack(val, true);
-    };
-    // 请求失败回调
-    const runFail = val => {
-        // 处理重试
-        if (retry && retryCount.value < retry) {
-            retryCount.value++;
-            setTimeout(run, retryDelay);
-            return;
+        // 清理请求
+        const stop = () => {
+            loading.value && http.value?.abort()
         }
-        runCallBack(val, false);
-    };
-    // 请求函数
-    const run = () => {
-        // 清除正在进行中的请求
-        stop();
-        const [url, method = 'GET'] = urlPath.split(' ');
-        // 处理缓存
-        if (method === 'GET' && _cache.has(id)) {
-            if (_cacheDelay.get(id) > new Date().getTime()) {
-                runCallBack(_cache.get(id), true);
-                return;
+        // 请求回调
+        const runCallBack = (val, isSuccess) => {
+            if (isSuccess) {
+                r(val)
             } else {
-                clear()
+                e(val)
             }
+
         }
-        loading.value = true;
-        // 保存请求实例
-        http.value = request({
-            ...(uniAjaxOptions || {}),
-            url: url,
-            method,
+
+        // 请求成功回调
+        const runSuccess = val => {
+            // 处理缓存
+            if (cache && val.config.method === 'GET') {
+                _cache.set(id, val)
+                _cacheDelay.set(id, new Date().getTime() + cacheDelay)
+            }
+            retryCount.value = 0
+            runCallBack(val, true)
+        }
+        // 请求失败回调
+        const runFail = val => {
+            // 处理重试
+            if (retry && retryCount.value < retry) {
+                retryCount.value++
+                setTimeout(run, retryDelay)
+                return
+            }
+            runCallBack(val, false)
+        }
+        // 请求函数
+        const run = async () => {
+            // 清除正在进行中的请求
+            stop()
+            const [url, method = 'GET'] = urlPath.split(' ')
+            // 处理缓存
+            if (method === 'GET' && _cache.has(id)) {
+                if (_cacheDelay.get(id) > new Date().getTime()) {
+                    runCallBack(_cache.get(id), true)
+                    return
+                } else {
+                    clear()
+                }
+            }
+
+            loading.value = true
+            // 保存请求实例
+            http.value = await request({
+                ...(uniAjaxOptions || {}),
+                url: url,
+                method,
+            })
+              .then(runSuccess)
+              .catch(runFail)
+              .finally(() => {
+                  count.value += 1
+              })
+        }
+
+        // 响应式依赖触发请求
+        watch(rely, run, { deep: true, immediate: true })
+
+        // 卸载时清理请求
+        onBeforeUnmount(() => {
+            stop()
         })
-            .then(runSuccess)
-            .catch(runFail)
-            .finally(() => {
-                count.value += 1;
-            });
-    };
+    })
 
-    // 响应式依赖触发请求
-    watch(rely, run, { deep: true, immediate: true });
-
-    // 卸载时清理请求
-    onBeforeUnmount(() => {
-        stop();
-    });
-
-    return {
-        loading: readonly(loading),
-        error: readonly(error),
-        data: readonly(data),
-        status: readonly(status),
-        cookies: readonly(cookies),
-        headers: readonly(headers),
-        count: readonly(count),
-        retryCount: readonly(retryCount),
-        run,
-        stop,
-        clear
-    };
 }
 
-export { useRequest };
+export { useRequest }

@@ -65,8 +65,17 @@
     "mp-toutiao" : {
         "usingComponents" : true
     },
-    "uniStatistics": {
-        "enable": false
+    "uniStatistics" : {
+        "enable" : false
     },
-    "vueVersion" : "3"
+    "vueVersion" : "3",
+    "h5" : {
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "YUJBZ-3XM66-453S6-E7IIO-RZES6-4JFRH"
+                }
+            }
+        }
+    }
 }

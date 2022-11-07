@@ -1,24 +1,162 @@
 {
-	"easycom":{
-		"autoscan": true,
-		"custom":{
-			"^(.*)$":"src/components/$1/index.vue",
-			"^u-(.*)": "uview-plus/components/u-$1/u-$1.vue",
-			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
-		}
-	},
-	"pages": [
-		{
-			"path": "pages/home",
-			"style": {
-				"navigationBarTitleText": "home"
-			}
-		}
-	],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
-	}
+  "pages": [
+    {
+      "path": "pages/home/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/login/index",
+      "style": {
+        "navigationBarTitleText": "登录",
+        "navigationStyle": "custom",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseInfo/index",
+      "style": {
+        "navigationBarTitleText": "企业信息",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseInfo/enterpriseList",
+      "style": {
+        "navigationBarTitleText": "信息变更",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseList/index",
+      "style": {
+        "navigationBarTitleText": "服务企业",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/serveLog/index",
+      "style": {
+        "navigationBarTitleText": "服务记录",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/serveLog/detail",
+      "style": {
+        "navigationBarTitleText": "记录详情",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/fillServe/index",
+      "style": {
+        "navigationBarTitleText": "服务企业",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/fillServe/scanQrCode",
+      "style": {
+        "navigationBarTitleText": "扫一扫",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/issue/index",
+      "style": {
+        "navigationBarTitleText": "问题反馈",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/issue/addIssue",
+      "style": {
+        "navigationBarTitleText": "新增问题",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/issue/detail",
+      "style": {
+        "navigationBarTitleText": "问题详情",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/leaderUserDetail/index",
+      "style": {
+        "navigationBarTitleText": "服务详情",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseUserServeList/index",
+      "style": {
+        "navigationBarTitleText": "服务记录",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseUserEval/index",
+      "style": {
+        "navigationBarTitleText": "服务评价",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseUserProblem/index",
+      "style": {
+        "navigationBarTitleText": "问题列表",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseUserProblem/feedBack",
+      "style": {
+        "navigationBarTitleText": "问题反馈",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    },
+    {
+      "path": "pages/enterpriseUserProblem/problemDetail",
+      "style": {
+        "navigationBarTitleText": "问题详情",
+        "navigationStyle": "default",
+        "disableScroll": true
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+      "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+      "^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+      //      "^(.*)$": "src/components/$1/index.vue"
+    }
+  }
 }

@@ -6,27 +6,26 @@
  * @LastEditTime: 2022-10-02 03:09:23
  * @Description:
  */
-import { createSSRApp } from 'vue';
-import App from 'src/App.vue';
+import { createSSRApp } from 'vue'
+import App from 'src/App.vue'
 
-import "uno.css";
 
+import 'uno.css'
 import uviewPlus from 'uview-plus'
 
-const plugins = Object.assign({}, ...Object.values(import.meta.globEager(`/src/plugins/*.[tj]s`)));
+
+const plugins = Object.assign({}, ...Object.values(import.meta.globEager(`/src/plugins/*.[tj]s`)))
 
 function createApp() {
-    const app = createSSRApp(App);
+  const app = createSSRApp(App)
+  app.use(uviewPlus)
+  for (let key in plugins) {
+    plugins[key](app)
+  }
 
-    for (let key in plugins) {
-        plugins[key](app);
-    }
-
-    app.use(uviewPlus)
-
-    return {
-        app,
-    };
+  return {
+    app,
+  }
 }
 
-export { createApp };
+export { createApp }
