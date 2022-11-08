@@ -1,0 +1,1 @@
+import{J as a}from"./index.338b6ccd.js";const e=e=>a("/wap/enterprise/serviceList POST",{data:e}),s=e=>a("/wap/enterprise/myQuestionList POST",{data:e}),t=e=>a("/wap/enterprise/addQuestion POST",{data:e}),r=e=>a("/wap/enterprise/eval POST",{data:e});export{t as a,r as h,s as m,e as s};

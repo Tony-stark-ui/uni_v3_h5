@@ -1,0 +1,1 @@
+const s={INPUT:"input",SLOTINPUT:"slotInput",TEXTAREA:"textarea",PASSWORDINP:"passwordInp",SELECT:"select",DATE_PICKER:"datepicker",RADIO:"radio",CHECKBOX:"checkbox",OPERATION:"operation",SLOT:"slot"},t={success:"操作成功"};export{s as P,t as c};
